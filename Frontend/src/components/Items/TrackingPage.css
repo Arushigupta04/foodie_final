@@ -1,169 +1,444 @@
+/* General page styling */
 .tracking-page {
     max-width: 1000px;
     margin: 20px auto;
     font-family: Arial, sans-serif;
     color: #333;
-    
+    padding: 20px;
 }
-.newww{
-    min-height: 65vh;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(to left, #fff3e0, #ffcc80); 
-}
+
 .page-title {
     font-size: 45px;
     font-weight: bolder;
-    margin-bottom: 10px;
+    margin-top: -10px;
+    margin-bottom: 50px;
     text-align: center;
-    color:#007bff;
+    color: #007bff;
+    text-transform: uppercase;
 }
 
+/* Content layout */
 .content {
     display: flex;
-    flex-direction: row;
-    gap: 30px;
-}
-
-.button-column {
-    display: flex;
     flex-direction: column;
-    gap: 15px;
-    flex: 1;
-}
-
-.action-button {
-    padding: 15px 25px;
-    font-size: 18px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    width:400px;
-    transition: transform 0.2s ease, background-color 0.3s ease;
-    text-align: center;
-}
-
-.action-button:hover {
-    transform: scale(1.05);
-}
-
-.action-button.active-button {
-    background-color: #f44336;
-    color: white;
-}
-
-.action-button.completed-button {
-    background-color: #4caf50;
-    color: white;
-    cursor: not-allowed;
-}
-
-.action-button.disabled-button {
-    background-color: #b0bec5;
-    color: white;
-    cursor: not-allowed;
-}
-
-.tracking-history {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 10px;
-    flex: 2;
-    border: 1px solid #140f0f;
-   background-color: rgb(242, 235, 235);
-}
-
-.history-title {
-    font-size: 30px;
-    font-weight: bolder;
-    margin-bottom: 20px;
-    color: #090c10;
-    text-align: left;
-    padding-left: 15px;
-}
-
-.tracking-history ul {
-    list-style-type: disc;
-    margin: 0;
+    gap: 60px;
+    align-items: center;
+    
+    align-items: center;
     
 }
 
-.tracking-history li {
-    font-size: 18px;
-    line-height: 1.8;
-    margin-bottom: 10px;
-    color: #555;
+/* Button column for actions */
+.button-column {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
 }
 
-.tracking-history .action-name {
+/* Circle box styling */
+.action-box {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
     font-weight: bold;
-    color: #2e7d32;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
+/* Completed circle with tick */
+.completed-box {
+    background-color: #4caf50; /* Green */
+    color: white;
+}
+.completed-box:hover{
+    transform: scale(1.1);
+}
+
+.completed-box::after {
+    content: '✓';
+    font-size: 28px;
+    font-weight: bolder;
+    color: white;
+    position: absolute;
+}
+
+/* Pending (not completed) circle */
+.pending-box {
+    background-color: #b0bec5; /* Grey */
+    color: white;
+}
+
+/* Active circle (current action) */
+.active-box {
+    background-color: red; /* Red */
+    color: white;
+    cursor: pointer;
+}
+
+.active-box:hover {
+    transform: scale(1.1);
+}
+
+/* Connecting line between circles */
+
+
+/* Action label below the circle */
+.action-label {
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+/* Error message styling */
 .error-message {
     background-color: #f44336;
     color: white;
     padding: 10px;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 20px;
     text-align: center;
-}
-.pending-box {
-    background-color: #f44336; /* Red */
-    color: white;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
+    font-size: 16px;
 }
 
+/* Tracking history styles */
+.tracking-history {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    width: 60%;
+    text-align: left;
+    margin: 0 auto;
+}
+
+.history-title {
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #090c10;
+}
+
+.tracking-history ul {
+    display: flex;
+    flex-direction: column; /* Stack the list items vertically */
+    align-items: center; /* Center items horizontally */
+    text-align: center; /* Center the text inside the list items */
+    padding-left: 0; /* Remove default left padding */
+      list-style: none;
+    margin: 0; /* Remove default margin */
+}
+
+.tracking-history li {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 10px;
+    color: #555;
+    text-align: center; /* Center the text within each list item */
+    width: 100%; /* Ensure list items take full width of their parent */
+}
+
+.tracking-history .action-name {
+    font-weight: bold;
+    color: #2e7d32;
+    text-transform:capitalize;
+}
+
+/* Loading message */
+.loading-message {
+    font-size: 20px;
+    text-align: center;
+    color: #007bff;
+    margin-top: 50px;
+}
+/* Line between circles */
+.line {
+    width: 100px;
+    height: 8px;
+    border-radius: 4px;
+    /* margin: 0 auto; */
+    transition: background-color 0.3s ease;
+}
+
+.line.completed {
+    background-color: #4caf50; /* Green for completed */
+}
+
+.line.pending {
+    background-color: #b0bec5; /* Grey for pending */
+}
+
+/* Adjust button and layout spacing */
+.button-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.button-wrapper:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 100%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+/* In TrackingPage.css */
+
+.line {
+    width: 100px;
+    height: 8px;
+    /* margin: 0 auto; */
+    margin:0;
+    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
+}
+
+.line.pending {
+    background-color: #ccc; /* Grey for pending */
+}
+
+.line.completed {
+    background-color: #28a745; /* Green for completed */
+}
+
+
+/* Line between circles */
+
+
+/* Line states */
+.line.pending {
+    background-color: #b0bec5; /* Grey for pending */
+}
+
+.line.completed {
+    background-color: #4caf50; /* Green for completed */
+}
+
+/* Button column for actions */
+.button-column {
+    display: flex;
+    flex-direction: row;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+/* Button wrapper for circles */
+.button-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.button-wrapper:not(:last-child) .line {
+    margin-top: -100px; /* Pull the line up to join with button */
+    margin-bottom: -100px; /* Optional to remove any spacing between buttons and line */
+}
+/* Line between circles */
+
+
+/* Button column for actions */
+
+
+/* Remove margin between the line and the button */
+
+/* General page styling */
+.tracking-page {
+    max-width: 1000px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+    padding: 20px;
+}
+
+.page-title {
+    font-size: 45px;
+    font-weight: bolder;
+    margin-top: -10px;
+    margin-bottom: 50px;
+    text-align: center;
+    color: #007bff;
+    text-transform: uppercase;
+}
+
+/* Content layout */
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    align-items: center;
+}
+
+/* Button column for actions */
+.button-column {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Circle box styling */
+.action-box {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+/* Completed circle with tick */
 .completed-box {
     background-color: #4caf50; /* Green */
     color: white;
+}
+.completed-box:hover {
+    transform: scale(1.1);
+}
+
+.completed-box::after {
+    content: '✓';
+    font-size: 28px;
+    font-weight: bolder;
+    color: white;
+    position: absolute;
+}
+
+/* Pending (not completed) circle */
+.pending-box {
+    background-color: #b0bec5; /* Grey */
+    color: white;
+}
+
+/* Active circle (current action) */
+.active-box {
+    background-color: red; /* Red */
+    color: white;
+    cursor: pointer;
+}
+
+.active-box:hover {
+    transform: scale(1.1);
+}
+
+/* Action label below the circle */
+.action-label {
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+/* Error message styling */
+.error-message {
+    background-color: #f44336;
+    color: white;
     padding: 10px;
-    margin: 5px 0;
     border-radius: 5px;
-}
-.action-box {
-    padding: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    border: none;
-    width:400px;
-    border-radius: 8px;
-    /* cursor: pointer; */
+    margin-top: 20px;
     text-align: center;
-    margin-bottom: 10px;
+    font-size: 16px;
 }
 
-.pending-box {
-    background-color: #f44336;
-    color: white;
+/* Tracking history styles */
+.tracking-history {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    width: 60%;
+    text-align: left;
+    margin: 0 auto;
 }
 
-.completed-box {
-    background-color: #4caf50;
-    color: white;
-}
-.action-box {
-    padding: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    /* cursor: pointer; */
+.history-title {
     text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #090c10;
+}
+
+.tracking-history ul {
+    display: flex;
+    flex-direction: column; /* Stack the list items vertically */
+    align-items: center; /* Center items horizontally */
+    text-align: center; /* Center the text inside the list items */
+    padding-left: 0; /* Remove default left padding */
+    list-style: none;
+    margin: 0; /* Remove default margin */
+}
+
+.tracking-history li {
+    font-size: 16px;
+    line-height: 1.8;
     margin-bottom: 10px;
+    color: #555;
+    text-align: center; /* Center the text within each list item */
+    width: 100%; /* Ensure list items take full width of their parent */
 }
 
-.pending-box {
-    background-color: #f44336;
-    color: white;
+.tracking-history .action-name {
+    font-weight: bold;
+    color: #2e7d32;
+    text-transform: capitalize;
 }
 
-.completed-box {
-    background-color: #4caf50;
-    color: white;
+/* Loading message */
+.loading-message {
+    font-size: 20px;
+    text-align: center;
+    color: #007bff;
+    margin-top: 50px;
 }
+
+/* Line between circles */
+.line {
+    width: 100px;
+    height: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.line.completed {
+    background-color: #4caf50; /* Green for completed */
+}
+
+.line.pending {
+    background-color: #b0bec5; /* Grey for pending */
+}
+
+/* Button wrapper for circles */
+.button-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.button-wrapper:not(:last-child) .line {
+    margin-top: -100px; /* Pull the line up to join with button */
+    margin-bottom: -100px; /* Optional to remove any spacing between buttons and line */
+}
+/* Completed line styles */
