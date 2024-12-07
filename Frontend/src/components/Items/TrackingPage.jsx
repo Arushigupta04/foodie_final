@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './TrackingPage.css';
@@ -15,7 +16,6 @@ const TrackingPage = () => {
 
     const actions = ['received', 'accepted', 'prepared', 'out-for-delivery', 'delivered'];
 
-    // Fetch tracking data from the backend
     const fetchTracking = async () => {
         try {
             const response = await fetch(`${API_URL}/api/tracking/items/${id}/tracking`, {
@@ -35,7 +35,6 @@ const TrackingPage = () => {
         }
     };
 
-    // Fetch the user's role
     const fetchUserRole = async () => {
         try {
             const response = await fetch(`${API_URL}/api/user`, {
@@ -53,7 +52,6 @@ const TrackingPage = () => {
         }
     };
 
-    // Handle action button click and log the action
     const handleLogAction = async (action, index) => {
         if (index !== currentActionIndex) {
             setErrorMessage(`Please complete "${actions[currentActionIndex]}" first.`);
@@ -66,7 +64,7 @@ const TrackingPage = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
                 body: JSON.stringify({}),
             });
@@ -75,11 +73,9 @@ const TrackingPage = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            // Update the action state for this specific order in localStorage
             const nextActionIndex = currentActionIndex + 1;
             setCurrentActionIndex(nextActionIndex);
 
-            // Store the next completed action index for this specific order
             const updatedActions = { ...completedActions, [id]: nextActionIndex };
             setCompletedActions(updatedActions);
             localStorage.setItem('completedActions', JSON.stringify(updatedActions));
@@ -90,10 +86,9 @@ const TrackingPage = () => {
         }
     };
 
-    // Load initial state from localStorage for this specific order
     useEffect(() => {
         const storedActions = JSON.parse(localStorage.getItem('completedActions')) || {};
-        const storedActionIndex = storedActions[id] || 0; // Default to 0 if not found for the order
+        const storedActionIndex = storedActions[id] || 0;
         setCompletedActions(storedActions);
         setCurrentActionIndex(storedActionIndex);
 
@@ -105,43 +100,58 @@ const TrackingPage = () => {
         return <div className="loading-message">Loading...</div>;
     }
 
-    // Sort the tracking actions to show the latest actions first
     const sortedTracking = [...tracking].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
     return (
-        <div className='newww'>
         <div className="tracking-page">
             <h1 className="page-title">Tracking Information</h1>
             <div className="content">
                 <div className="button-column">
-                    {userRole === 'Admin' && actions.map((action, index) => (
-                        <button
-                            key={action}
-                            className={`action-button ${
-                                index === currentActionIndex
-                                    ? 'active-button'
-                                    : index < currentActionIndex
-                                    ? 'completed-button'
-                                    : 'disabled-button'
-                            }`}
-                            onClick={() => handleLogAction(action, index)}
-                            disabled={index !== currentActionIndex || index < currentActionIndex}
-                        >
-                            {action.charAt(0).toUpperCase() + action.slice(1)}
-                        </button>
-                    ))}
-
-                    {userRole === 'User' && actions.map((action, index) => (
-                        <div
-                            key={action}
-                            className={`action-box ${
-                                completedActions[id] > index ? 'completed-box' : 'pending-box'
-                            }`}
-                        >
-                            <span>{action.charAt(0).toUpperCase() + action.slice(1)}</span>
-                        </div>
+                    {actions.map((action, index) => (
+                        <React.Fragment key={action}>
+                            <div className="button-wrapper">
+                                {userRole === 'Admin' ? (
+                                    <button
+                                        className={`action-box ${
+                                            index === currentActionIndex
+                                                ? 'active-box'
+                                                : index < currentActionIndex
+                                                ? 'completed-box'
+                                                : 'pending-box'
+                                        }`}
+                                        onClick={() => handleLogAction(action, index)}
+                                        disabled={index !== currentActionIndex}
+                                    >
+                                        {index < currentActionIndex && '✓'}
+                                    </button>
+                                ) : (
+                                    <div
+    className={`action-box ${
+        index < currentActionIndex
+            ? 'completed-box'
+            : index === currentActionIndex
+            ? 'active-box'
+            : 'pending-box'
+    }`}
+                                    >
+                                        {index < currentActionIndex && '✓'}
+                                    </div>
+                                )}
+                                <span className="action-label">{action.replace('-', ' ')}</span>
+                            </div>
+                            {index < actions.length - 1 && (
+                                <div
+                                    className={`line ${
+                                        index < currentActionIndex 
+                                            ? 'completed' 
+                                            : 'pending'
+                                    }`}
+                                ></div>
+                            )}
+                        </React.Fragment>
                     ))}
                 </div>
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
                 <div className="tracking-history">
                     <h2 className="history-title">Tracking History</h2>
                     <ul>
@@ -154,8 +164,6 @@ const TrackingPage = () => {
                     </ul>
                 </div>
             </div>
-            {errorMessage && <div className="error-message">{errorMessage}</div>}
-        </div>
         </div>
     );
 };
