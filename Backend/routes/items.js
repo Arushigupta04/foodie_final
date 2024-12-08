@@ -120,6 +120,24 @@ router.get('/categories', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+router.get('/categoriess', async (req, res) => {
+    try {
+        // Fetch all categories and populate the 'food_item' field
+        const categories = await Category.find().populate('food_item');
+
+        // Map over categories to include the item count with a check for undefined or empty arrays
+        const categoryData = categories.map(category => ({
+            category_title: category.category_title,
+            item_count: Array.isArray(category.food_item) ? category.food_item.length : 0, // Ensure it's an array
+        }));
+
+        res.status(200).json(categoryData); // Return the processed data
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch categories' });
+    }
+});
+
+
 
 // Get all items
 router.get('/items', async (req, res) => {
@@ -188,6 +206,7 @@ router.delete('/categories/:id', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
 
 
 
