@@ -12,6 +12,7 @@ const serverURL = "http://localhost:5000";
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [graphData, setGraphData] = useState(null);
   const [totalCategories, setTotalCategories] = useState(0);
   const [totalitems, setTotalitems] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
@@ -81,31 +82,59 @@ function AdminDashboard() {
 
     fetchReviews();
   }, []); 
+  const [categories, setCategories] = useState([]);
+
   useEffect(() => {
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(`${serverURL}/api/add-new/categories`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch categories');
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${serverURL}/api/add-new/categoriess/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+  
+       
+        const categoryData = await response.json();
+        setTotalCategories(categoryData.length);
+        setCategories(categoryData); // Store category data
+      } catch (error) {
+        setError(error.message);
       }
-
-      const categoryData = await response.json();
-      setTotalCategories(categoryData.length); // Update total category count
-    } catch (error) {
-      setError(error.message); // Handle errors
-    }
+    };
+  
+    fetchCategories();
+  }, []);
+  
+  const itemsData = {
+    labels: categories.map(category => category.category_title),
+    datasets: [
+      {
+        label: 'Category on Platform',
+        data: categories.map(category => category.item_count),
+       backgroundColor: [
+  '#D32F2F', // Dark Red
+  '#1976D2', // Dark Blue
+  '#FBC02D', // Dark Yellow
+  '#388E3C', // Dark Green
+  '#0288D1', // Dark Cyan
+  '#8E24AA', // Dark Purple
+  '#FFCE56', // Dark Blue again (adjust if needed)
+  '#C9CBCF', // Dark Magenta
+]
+,
+        borderColor: '#fff',
+        borderWidth: 2,
+      },
+    ],
   };
-
-  fetchCategories();
-}, []);
+  
 useEffect(() => {
-  const fetchItems = async () => {
+const fetchItems = async () => {
     try {
       const response = await fetch(`${serverURL}/api/add-new/items`, {
         method: 'GET',
@@ -191,7 +220,7 @@ useEffect(() => {
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Subtle shadow
           },
         });
-      }
+      }  
     } catch (error) {
       console.error("Error deleting user:", error);
       toast.error("An error occurred while deleting the user", {
@@ -228,29 +257,47 @@ useEffect(() => {
     return counts;
   }, {});
 
-  const itemsData = {
-    labels: ['Combo', 'All-in-1', 'Main Course', 'Sandwiches', 'Drinks', 'Desserts', 'Ice Creams', 'Biryani'],
-    datasets: [{
-      label: 'Category on Platform',
-      data: [30, 20, 50, 10, 70, 40, 30, 40],
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#AFEEEE', '#FF6384', '#C9CBCF', '#32CD32'],
-      borderColor: '#fff',
-      borderWidth: 2,
-    }],
-  };
+ 
 
-  const monthlySalesData = {
-    labels: ['January', 'February', 'March', 'April', 'May'],
-    datasets: [{
-      label: 'Monthly Sales',
-      data: [5000, 7000, 6000, 8000, 9000],
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 2,
-      fill: true,
-      tension: 0.1,
-    }],
-  };
+  useEffect(() => {
+    const fetchSalesData = async () => {
+      try {
+        const response = await fetch(`${serverURL}/api/v1/pay/payments/last7days`);
+        const { success, labels, data } = await response.json();
+
+        if (success) {
+          // Reverse the labels and data arrays
+          const reversedLabels = labels.reverse();
+          const reversedData = data.reverse();
+
+          setGraphData({
+            labels: reversedLabels.map((label) =>
+              new Date(label).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })
+            ),
+            datasets: [
+              {
+                label: "Last 7 Days Payments",
+                data: reversedData,
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 2,
+                fill: true,
+                tension: 0.1,
+              },
+            ],
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching sales data:", error);
+      }
+    };
+
+    fetchSalesData();
+  }, []);
+
 
   const userRoleData = {
     labels: Object.keys(userRoleCounts),
@@ -424,17 +471,21 @@ useEffect(() => {
 
                       {/* Monthly Sales */}
                       <div className="col-xl-4 col-md-6 mb-4">
-                        <div className="card shadow h-100 py-2">
-                          <div className="card-header py-3">
-                            <h6 className="m-0 font-weight-bold text-primary">Monthly Sales</h6>
-                          </div>
-                          <div className="card-body">
-                            <div className="chart-container" style={{ width: '100%', height: '300px' }}>
-                              <Line data={monthlySalesData} />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+      <div className="card shadow h-100 py-2">
+        <div className="card-header py-3">
+          <h6 className="m-0 font-weight-bold text-primary">Weekly Sales</h6>
+        </div>
+        <div className="card-body">
+          {graphData ? (
+            <div className="chart-container" style={{ width: "100%", height: "300px" }}>
+              <Line data={graphData} />
+            </div>
+          ) : (
+            <p>Loading chart...</p>
+          )}
+        </div>
+      </div>
+    </div>
 
                       {/* User Roles */}
                       <div className="col-xl-4 col-md-6 mb-4">
