@@ -1,148 +1,78 @@
 /* General Styles */
 body {
     margin: 0;
-    font-family: 'Arial', sans-serif;
-}
-
-/* Gradient background for the specific page */
-.gradient-background {
-    background: linear-gradient(to left, #fff3e0, #ffcc80);
-    min-height: 69vh;
-    display: flex
-;
-    justify-content: center;
-    align-items: center; 
-    /* Light gradient background */
-}
-
-/* Flexbox Utilities */
-.flex {
+    font-family: Arial, sans-serif;
+  }
+  
+  .containera {
+    min-height: 100vh;
     display: flex;
-}
-
-.justify-center {
     justify-content: center;
-}
-
-.items-center {
     align-items: center;
-}
-
-/* Sizing Utilities */
-.h-screen {
-    height: 100vh;
-}
-
-.p-8 {
-    padding: 2rem;
-    width: 100vw;
-}
-
-.w-full {
+    background: linear-gradient(to left, #ffcc80, #ffe0b2);
+    /* background: linear-gradient(to right, #4facfe, #00f2fe); */
+  }
+  
+  .content {
     width: 100%;
-}
-
-.md\:w-2\/3 {
-    width: 60%; /* Reduced width for medium screens */
-}
-
-.lg\:w-1\/2 {
-    width: 50%; /* Reduced width for large screens */
-}
-
-/* Typography Utilities */
-.text-3xl {
-    font-size: 1.875rem;
-}
-
-.font-bold {
-    font-weight: bold;
-}
-
-.mb-6 {
-    margin-bottom: 1.5rem;
-}
-
-.text-center {
+    max-width: 800px;
+    padding: 20px;
+    /* background: white; */
+    border-radius: 10px;
+    /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  }
+  
+  .bestttt {
     text-align: center;
-}
-
-.text-blue-600 {
-    color: #3b82f6; /* Tailwind Blue Color */
-}
-
-.text-gray-500 {
-    color: #6b7280; /* Tailwind Gray Color */
-}
-
-/* Table Styling */
-table {
-    width: 90%; /* Reduced overall table width */
+    font-size: 3.2rem;
+    color: #007bff;
+    margin-top: -230px;
+    font-weight: 600;
+    margin-bottom: -20px;
+  }
+  
+  /* Loading and Error Screens */
+  .loading-screen,
+  .error-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 1.5rem;
+    color: #666;
+  }
+  
+  /* Table Styles */
+  .payment-table {
+    width: 170%;
     border-collapse: collapse;
-    border: 2px solid black; /* Black border for the entire table */
-    margin: 0 auto;
-    background-color: #ffffff; /* White table background */
-}
-
-thead {
-    background-color: #3b82f6; /* Blue header background */
-    color: white; /* White text for the header */
-}
-
-th, td {
-    padding: 1rem;
+    margin-top: 20px;
+  }
+  
+  .payment-table th,
+  .payment-table td {
+    border: 1px solid black;
+    padding: 10px;
+   line-height: 40px;
+    /* gap:40px; */
     text-align: center;
-    border: 2px solid black; /* Black borders for all cells */
-}
-
-tbody tr:nth-child(even) {
-    background-color: #f9fafb; /* Light gray background for even rows */
-}
-
-tbody tr:hover {
-    background-color: #f3f4f6; /* Slightly darker gray on hover */
-    transition: background-color 0.3s; /* Smooth transition effect */
-}
-
-th {
-    font-size: 1rem;
-    font-weight: bold;
-    text-transform: uppercase; /* Uppercase column headings */
-    letter-spacing: 0.05em;
-}
-
-/* Responsive Utilities */
-@media (max-width: 768px) {
-    .md\:w-2\/3 {
-        width: 90%; /* Adjust width for small screens */
-    }
-}
-
-@media (max-width: 1024px) {
-    .lg\:w-1\/2 {
-        width: 75%; /* Adjust width for medium screens */
-    }
-}
-
-/* Additional Styling for Smooth Visuals */
-.border {
-    border: 2px solid black;
-}
-
-.mx-auto {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-tbody td {
-    font-size: 0.95rem;
-    color: #4b5563; /* Subtle gray for table body text */
-}
-
-h1 {
-    font-size: 2rem;
-    color: #1f2937; /* Darker gray for headings */
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
+  }
+  
+  .payment-table th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .even-row {
+    background-color: #f9f9f9;
+  }
+  
+  .odd-row {
+    background-color: white;
+  }
+  
+  .odd-row:hover,
+  .even-row:hover {
+    background-color: #f1f1f1;
+  }
+  
