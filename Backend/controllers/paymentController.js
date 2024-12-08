@@ -5,6 +5,7 @@ const Payment = require("../models/paymentModel.js");
 const crypto = require("crypto");
 // const User = require("../models/user.js");
 const Razorpay = require("razorpay");
+const moment = require("moment"); 
 
 const instance = new Razorpay({
     key_id: process.env.RAZORPAY_API_KEY,
@@ -125,4 +126,53 @@ const getAllUsersWithPayments = async (req, res) => {
   }
 };
 
-module.exports = { checkout, paymentVerification, getAllUsersWithPayments };
+
+const getLast7DaysPayments = async (req, res) => {
+  try {
+    const endDate = moment().endOf("day").utc(); // End of today in UTC
+    const startDate = moment().subtract(7, "days").startOf("day").utc(); // Start of 7 days ago in UTC
+
+    // Aggregate payments within the last 7 days
+    const payments = await Payment.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startDate.toDate(),
+            $lte: endDate.toDate(),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: "UTC" } },
+          totalAmount: { $sum: "$amount" },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    // Create an array of the last 7 days
+    const allDates = [];
+    for (let i =6; i >=0; i--) {
+      allDates.push(moment().subtract(i, "days").utc().format("YYYY-MM-DD"));
+    }
+
+    // Map payments to dates, filling missing dates with 0
+    const paymentMap = payments.reduce((acc, payment) => {
+      acc[payment._id] = payment.totalAmount;
+      return acc;
+    }, {});
+
+    const labels = allDates;
+    const data = allDates.map((date) => paymentMap[date] || 0);
+
+    res.status(200).json({ success: true, labels, data });
+  } catch (error) {
+    console.error("Error fetching last 7 days payments:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+
+
+module.exports = { checkout, paymentVerification, getAllUsersWithPayments, getLast7DaysPayments };
